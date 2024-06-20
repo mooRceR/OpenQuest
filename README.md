@@ -1,6 +1,6 @@
 # Welcome to OpemQuest!
 ---
-OpenQuest is a fork of OpenRec (by recroom2016)!
+OpenQuest is a fork of OpenRec (which was by recroom2016)!
 
 ### Branches
  - Master / main
