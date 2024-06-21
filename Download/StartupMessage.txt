@@ -1,0 +1,5 @@
+// Welcome to OpenQuest!
+// This is a FORK of OpenRec, just some quality of life improvements I thought would be nice
+//
+// This application sends and receives data to/from the game!
+// If you're not sure what to do, just start rec room!
