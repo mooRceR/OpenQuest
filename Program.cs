@@ -8,170 +8,102 @@ using System.Diagnostics;
 using vaultgamesesh;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using OpenRec.Tools;
 
 namespace start
 {
     class Program
     {
+        static void Tutorial()
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Setup.firsttime = false;
+            Console.Title = "OpenQuest Intro";
+            Console.WriteLine("Welcome to OpenQuest " + appversion + "!");
+            Console.WriteLine("Is this your first time using OpenQuest or OpenRec?");
+            Console.WriteLine("Yes or No (Y, N)");
+            var A = InputTool.ReadInput();
+            if (A.KeyChar == 'y' || A.KeyChar == 'Y')
+            {
+                Console.Clear();
+                Console.Title = "OpenQuest Tutorial";
+                Console.WriteLine("In that case, welcome to OpenQuest!");
+                Console.WriteLine("OpenRec is server software that emulates the old servers of previous RecRoom versions.");
+                Console.WriteLine("To use OpenRec, you'll need to have builds aswell!");
+                Console.WriteLine("To download builds, either go to the builds channel or use the links below: (these links are also available from the #builds channel)" + Environment.NewLine);
+                Console.WriteLine(GithubTool.GetString("Update/builds.txt").Result);
+                Console.WriteLine("Download a build and press any key to continue:");
+                Console.ReadKey();
+                Console.Clear();
+                Console.WriteLine("Now that you have a build, what you're going to do is as follows:" + Environment.NewLine);
+                Console.WriteLine("1. Unzip the build");
+                Console.WriteLine("2. Start the server by pressing 5 on the main menu and selecting your version as follows");
+                Console.WriteLine("3. Run Recroom_Release.exe from the folder of the build you downloaded." + Environment.NewLine);
+                Console.WriteLine("And that's it! Press any key to go to the main menu, where you will be able to start the server:");
+                Console.ReadKey();
+                Console.Clear();
+                Main();
+            }
+
+            else
+            {
+                Console.Clear();
+                Main();
+            }
+        }
         static void Main()
         {
             //startup for openrec
-            
-            Setup.setup();
-            goto Tutorial;
 
-        Tutorial:
+            GithubTool.Setup();
+            Setup.setup();
+            Console.CursorVisible = false;
+
             if (Setup.firsttime == true)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Title = "OpenRec Intro";
-                Console.WriteLine("Welcome to OpenRec " + appversion + "!");
-                Console.WriteLine("Is this your first time using OpenRec?");
-                Console.WriteLine("Yes or No (Y, N)");
-                string readline22 = Console.ReadLine();
-                if (readline22 == "y" || readline22 == "Y")
-                {
-                    Console.Clear();
-                    Console.Title = "OpenRec Tutorial";
-                    Console.WriteLine("In that case, welcome to OpenRec!");
-                    Console.WriteLine("OpenRec is server software that emulates the old servers of previous RecRoom versions.");
-                    Console.WriteLine("To use OpenRec, you'll need to have builds aswell!");
-                    Console.WriteLine("To download builds, either go to the builds channel or use the links below: (these links are also available from the #builds channel)" + Environment.NewLine);
-                    Console.WriteLine(new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Update/builds.txt"));
-                    Console.WriteLine("Download a build and press any key to continue:");
-                    Console.ReadKey();
-                    Console.Clear();
-                    Console.WriteLine("Now that you have a build, what you're going to do is as follows:" + Environment.NewLine);
-                    Console.WriteLine("1. Unzip the build");
-                    Console.WriteLine("2. Start the server by pressing 5 on the main menu and selecting your version as follows");
-                    Console.WriteLine("3. Run Recroom_Release.exe from the folder of the build you downloaded." + Environment.NewLine);
-                    Console.WriteLine("And that's it! Press any key to go to the main menu, where you will be able to start the server:");
-                    Console.ReadKey();
-                    Console.Clear();
-                    goto Start;
-                }
-
-                else
-                {
-                    Console.Clear();
-                    goto Start;
-                }
-            }
-            else
-            {
-                goto Start;
+                Tutorial();
             }
 
-        Start:
-            Console.Title = "OpenRec Startup Menu";
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("OpenRec - Open source Old RecRoom server software. (Version: " + appversion + ")");
-            Console.WriteLine("Made and provided by RecRoom 2016.");
-            Console.WriteLine("Download source code here: https://github.com/recroom2016/OpenRec");
-            Console.WriteLine("Discord: https://discord.gg/daC8QUhnFP" + Environment.NewLine);
-            if (!(new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/version.txt").Contains(appversion)))
+            Console.Title = "OpenQuest - Loading...";
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Loading...");
+            try
             {
-                Console.WriteLine("This version of OpenRec is outdated. We recommend you install the latest version, OpenRec " + new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/version.txt"));
+                float V = GithubTool.GetFloat("Download/version.txt").Result;
+                Console.Clear();
+                if (V < appversion)
+                {
+                    Console.WriteLine("This version of OpenQuest is outdated. We recommend you install the latest version, OpenQuest " + V);
+                }
             }
+            catch
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Failed to check app version!");
+                Console.ForegroundColor = ConsoleColor.Magenta;
+            }
+            Console.Title = "OpenQuest - Startup";
+            Console.WriteLine("OpenQuest - a fork of OpenRec with some (hopefully) nice changes! :p (Version: " + appversion + ")");
+            Console.WriteLine("Made and provided by RecRoom 2016 and GabeTheFirst.");
+            Console.WriteLine("Download source code here: https://github.com/mooRceR/OpenQuest");
+            Console.WriteLine("Discord: https://discord.gg/CmnX7KWSGb" + Environment.NewLine);
             
-            Console.WriteLine("//Custom Room Downloader has been moved to the settings tab!" + Environment.NewLine);
-            Console.WriteLine("(1) What's New" + Environment.NewLine +"(2) Change Settings" + Environment.NewLine + "(3) Modify Profile" + Environment.NewLine + "(4) Build Download Links" + Environment.NewLine + "(5) Start Server");
-            string readline = Console.ReadLine();
-            if (readline == "1")
+            Console.WriteLine("(1) What's New\n" + 
+                "(2) Change Settings\n" + 
+                "(3) Modify Profile\n" +
+                "(4) Build Download Links\n" +
+                "(5) Start Server");
+            var A = InputTool.ReadInput();
+            if (A.KeyChar == '1')
             {
-                Console.Title = "OpenRec Changelog";
-                Console.Clear();
-                Console.WriteLine(new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/changelog.txt"));
-                Console.WriteLine("Press any key to continue:");
-                Console.ReadKey();
-                Console.Clear();
-                goto Start;
+                Changelog();
             }
-            if (readline == "2")
+            else if (A.KeyChar == '2')
             {
-                Console.Clear();
-                goto Settings;
-
-                Settings:
-                Console.Title = "OpenRec Settings Menu";
-                Console.WriteLine("(1) Private Rooms: " + File.ReadAllText("SaveData\\App\\privaterooms.txt") + Environment.NewLine + "(2) Custom Room Downloader " + Environment.NewLine + "(3) Reset SaveData" + Environment.NewLine + "(4) Go Back");
-                string readline4 = Console.ReadLine();
-                if (readline4 == "1")
-                {
-                    if (File.ReadAllText("SaveData\\App\\privaterooms.txt") == "Disabled")
-                    {
-                        File.WriteAllText("SaveData\\App\\privaterooms.txt", "Enabled");
-                    }
-                    else
-                    {
-                        File.WriteAllText("SaveData\\App\\privaterooms.txt", "Disabled");
-                    }
-                    Console.Clear();
-                    Console.WriteLine("Success!");
-                    goto Settings;
-                }
-                else if (readline4 == "2")
-                {
-                    Console.Title = "OpenRec Custom Room Downloader";
-                    Console.Clear();
-                    Console.WriteLine("Custom Room Downloader: This tool takes the room data of any room you type in and imports it into ^CustomRoom in September 27th 2018.");
-                    Console.WriteLine("Please type in the name of the room you would like to download: (Case sensitive)");
-                    string roomname = Console.ReadLine();
-                    string text = "";
-                    try
-                    {
-                        text = new WebClient().DownloadString("https://rooms.rec.net/rooms?name=" + roomname + "&include=297");
-                    }
-                    catch
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Failed to download room...");
-                        goto Settings;
-                    }
-                    CustomRooms.RoomDecode(text);
-                    Console.Clear();
-                    Console.WriteLine("Success!");
-                    goto Settings;
-                }
-                else if (readline4 == "3")
-                {
-                    File.Delete("SaveData\\avatar.txt");
-                    File.Delete("SaveData\\avataritems.txt");
-                    File.Delete("SaveData\\equipment.txt");
-                    File.Delete("SaveData\\consumables.txt");
-                    File.Delete("SaveData\\gameconfigs.txt");
-                    File.Delete("SaveData\\storefronts2.txt");
-                    File.Delete("SaveData\\Profile\\username.txt");
-                    File.Delete("SaveData\\Profile\\level.txt"); 
-                    File.Delete("SaveData\\Profile\\userid.txt");
-                    File.Delete("SaveData\\myrooms.txt"); 
-                    File.Delete("SaveData\\settings.txt");
-                    File.Delete("SaveData\\App\\privaterooms.txt");
-                    File.Delete("SaveData\\App\\facefeaturesadd.txt");
-                    File.Delete("SaveData\\profileimage.png");
-                    File.Delete("SaveData\\App\\firsttime.txt");
-                    
-                    File.Delete("SaveData\\avataritems2.txt");
-                 
-                    File.Delete("SaveData\\Rooms\\Downloaded\\roomname.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\roomid.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\datablob.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\roomsceneid.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\imagename.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\cheercount.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\favcount.txt");
-                    File.Delete("SaveData\\Rooms\\Downloaded\\visitcount.txt");
-                    Console.WriteLine("Success!");
-                    Setup.setup();
-                    goto Settings;
-                }
-                else if (readline4 == "4")
-                {
-                    Console.Clear();
-                    goto Start;
-                }
+                Settings();
             }
-            if (readline == "3")
+            else if (A.KeyChar == '3')
             {
                 Console.Clear();
                 goto Profile;
@@ -253,7 +185,7 @@ namespace start
                             {
                                 Console.Clear();
                                 Console.WriteLine("Failed to download profile...");
-                                goto Start;
+                                Main();
                             }
                         
                             List<ProfieStealer.Root> profile = JsonConvert.DeserializeObject<List<ProfieStealer.Root>>(data);
@@ -274,7 +206,7 @@ namespace start
                     else if (readline4 == "4")
                     {
                         Console.Clear();
-                        goto Start;
+                        Main();
                     }
                 }
                 else if (readline3 == "3")
@@ -307,22 +239,22 @@ namespace start
                     {
                         Console.Clear();
                         Console.WriteLine("Failed to download profile...");
-                        goto Start;
+                        Main();
                     }
                     
                     ProfieStealer.ProfileSteal(data2);
                     
                     Console.Clear();
                     Console.WriteLine("Success!");
-                    goto Start;
+                    Main();
                 }
                 else if (readline3 == "5")
                 {
                     Console.Clear();
-                    goto Start;
+                    Main();
                 }
             }
-            if (readline == "4")
+            else if (A.KeyChar == '4')
             {
                 Console.Title = "OpenRec Build Downloads";
                 Console.Clear();
@@ -331,9 +263,9 @@ namespace start
                 Console.WriteLine("Download a build and press any key to continue:");
                 Console.ReadKey();
                 Console.Clear();
-                goto Start;
+                Main();
             }
-            if (readline == "5")
+            else if (A.KeyChar == '5')
             {
                 Console.Title = "OpenRec Version Select";
                 Console.WriteLine("Please select the version of RecRoom the server should host: (2016, 2017, 2018)");
@@ -397,10 +329,129 @@ namespace start
                 }
                 Console.WriteLine(msg);
             }
+            else
+            {
+                Main();
+            }
         }
+
+        static void Settings()
+        {
+            Console.Clear();
+
+            Console.Title = "OpenQuest - Settings";
+            Console.WriteLine("OpenQuest settings:\n");
+            Console.WriteLine("(1) Private Rooms: " + File.ReadAllText("SaveData\\App\\privaterooms.txt") + "\n" +
+                "(2) Custom Room Downloader\n" +
+                "(3) Reset SaveData\n" +
+                "(4) Go Back\n");
+            string readline4 = InputTool.ReadInput().KeyChar.ToString();
+            if (readline4 == "1")
+            {
+                if (File.ReadAllText("SaveData\\App\\privaterooms.txt") == "Disabled")
+                {
+                    File.WriteAllText("SaveData\\App\\privaterooms.txt", "Enabled");
+                }
+                else
+                {
+                    File.WriteAllText("SaveData\\App\\privaterooms.txt", "Disabled");
+                }
+                Console.Clear();
+                Console.WriteLine("Success!");
+                Settings();
+            }
+            else if (readline4 == "2")
+            {
+                Console.Title = "OpenQuest - Room Download";
+                Console.Clear();
+                Console.WriteLine("Custom Room Downloader: This tool takes the room data of any room you type in and imports it into ^CustomRoom in September 27th 2018.");
+                Console.WriteLine("Please type in the name of the room you would like to download: (Case sensitive)");
+                string roomname = Console.ReadLine();
+                string text = "";
+                Console.Clear();
+                Console.WriteLine("Loading...");
+                try
+                {
+                    text = new WebClient().DownloadString("https://rooms.rec.net/rooms?name=" + roomname + "&include=297");
+                }
+                catch
+                {
+                    Console.Clear();
+                    Console.WriteLine("Failed to download room... [Press any key to continue! :p]");
+                    Console.ReadKey();
+                    Settings();
+                }
+                CustomRooms.RoomDecode(text);
+                Console.Clear();
+                Console.WriteLine("Success!");
+                Settings();
+            }
+            else if (readline4 == "3")
+            {
+                File.Delete("SaveData\\avatar.txt");
+                File.Delete("SaveData\\avataritems.txt");
+                File.Delete("SaveData\\equipment.txt");
+                File.Delete("SaveData\\consumables.txt");
+                File.Delete("SaveData\\gameconfigs.txt");
+                File.Delete("SaveData\\storefronts2.txt");
+                File.Delete("SaveData\\Profile\\username.txt");
+                File.Delete("SaveData\\Profile\\level.txt");
+                File.Delete("SaveData\\Profile\\userid.txt");
+                File.Delete("SaveData\\myrooms.txt");
+                File.Delete("SaveData\\settings.txt");
+                File.Delete("SaveData\\App\\privaterooms.txt");
+                File.Delete("SaveData\\App\\facefeaturesadd.txt");
+                File.Delete("SaveData\\profileimage.png");
+                File.Delete("SaveData\\App\\firsttime.txt");
+                File.Delete("SaveData\\avataritems2.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\roomname.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\roomid.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\datablob.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\roomsceneid.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\imagename.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\cheercount.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\favcount.txt");
+                File.Delete("SaveData\\Rooms\\Downloaded\\visitcount.txt");
+                Console.Clear();
+                Setup.setup();
+                Setup.firsttime = false;
+                Settings();
+            }
+            else if (readline4 == "4")
+            {
+                Console.Clear();
+                Main();
+            }
+        }
+
+        static void Changelog()
+        {
+            Console.Title = "OpenQuest Changelog";
+            Console.Clear();
+            Console.WriteLine("Loading...");
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                string C = GithubTool.GetString("Download/changelog.txt").Result;
+                Console.Clear();
+                Console.WriteLine(C);
+            }
+            catch
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Failed to download changelog!");
+            }
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("Press any key to continue:");
+            Console.ReadKey();
+            Console.Clear();
+            Main();
+        }
+
         public static string msg = "//This is the server sending and recieving data from recroom." + Environment.NewLine + "//Ignore this if you don't know what this means." + Environment.NewLine + "//Please start up the build now.";
         public static string version = "";
-        public static string appversion = "0.6.9";
+        public static float appversion = 7.1f;
         public static bool bannedflag = false;
     }
 

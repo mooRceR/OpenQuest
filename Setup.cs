@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
+using OpenRec.Tools;
 
 namespace start
 {
@@ -11,75 +12,36 @@ namespace start
 		public static bool firsttime = false;
 		public static void setup()
 		{
-			//sets up all the important files so openrec doesnt crash like lame vaultserver xD
-			Console.WriteLine("Setting up... (May take a minute to download everything.)");
-			Directory.CreateDirectory("SaveData\\App\\");
-			Directory.CreateDirectory("SaveData\\Profile\\");
-			Directory.CreateDirectory("SaveData\\Images\\");
-			Directory.CreateDirectory("SaveData\\Rooms\\");
-			Directory.CreateDirectory("SaveData\\Images\\");
-			Directory.CreateDirectory("SaveData\\Rooms\\Downloaded\\");
-			if (!(File.Exists("SaveData\\App\\firsttime.txt")))
+			Console.OutputEncoding = Encoding.Unicode;
+			// something something vault server uhh uhh ermm...
+			Console.WriteLine("Getting Data... [This may take a while! lots of files 🙀]");
+			Console.WriteLine();
+            CreateFolders();
+            if (!(File.Exists("SaveData\\App\\firsttime.txt")))
 			{
-				File.WriteAllText("SaveData\\App\\firsttime.txt", "this text file has no use other than to tell the program whether to bring up the intro or not, so i can just write random shit here. among us balls, you suck mad dick you big fat fa----");
 				firsttime = true;
 			}
-			if (!(File.Exists("SaveData\\avatar.txt")))
-			{
-				File.WriteAllText("SaveData\\avatar.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/avatar.txt"));
-			}
-			else if (File.ReadAllText("SaveData\\avatar.txt") == "")
+            CreateLocalFileIfRequired("SaveData\\App\\firsttime.txt", "uhh just shows the app it's been ran before? 🤷");
+			CreateFileIfRequired("SaveData\\avatar.txt", "Download/avatar.txt");
+			if (File.ReadAllText("SaveData\\avatar.txt") == "")
             {
-				File.WriteAllText("SaveData\\avatar.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/avatar.txt"));
+				File.WriteAllText("SaveData\\avatar.txt", GithubTool.GetString("Download/avatar.txt").Result);
 			}
-			if (!(File.Exists("SaveData\\avataritems.txt")))
-			{
-				File.WriteAllText("SaveData\\avataritems.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/avataritems.txt"));
-			}
-			if (!(File.Exists("SaveData\\avataritems2.txt")))
-			{
-				File.WriteAllText("SaveData\\avataritems2.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/avataritems2.txt"));
-			}
-			if (!(File.Exists("SaveData\\equipment.txt")))
-			{
-				File.WriteAllText("SaveData\\equipment.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/equipment.txt"));
-			}
-			if (!(File.Exists("SaveData\\consumables.txt")))
-			{
-				File.WriteAllText("SaveData\\consumables.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/consumables.txt"));
-			}
-			if (!(File.Exists("SaveData\\gameconfigs.txt")))
-			{
-				File.WriteAllText("SaveData\\gameconfigs.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/gameconfigs.txt"));
-			}
-			if (!(File.Exists("SaveData\\storefronts2.txt")))
-			{
-				File.WriteAllText("SaveData\\storefronts2.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/storefront2.txt"));
-			}
-			if (!(File.Exists("SaveData\\baserooms.txt")))
-			{
-				File.WriteAllText("SaveData\\baserooms.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/baserooms.txt"));
-			}
-			if (!(File.Exists("SaveData\\Profile\\username.txt")))
-			{
-				File.WriteAllText("SaveData\\Profile\\username.txt", "OpenRec User#" + new Random().Next(0, 1000000));
-			}
-			if (!(File.Exists("SaveData\\Profile\\level.txt")))
-			{
-				File.WriteAllText("SaveData\\Profile\\level.txt", "10");
-			}
-			if (!(File.Exists("SaveData\\Profile\\userid.txt")))
-			{
-				File.WriteAllText("SaveData\\Profile\\userid.txt", "10000000");
-			}
-			if (!(File.Exists("SaveData\\myrooms.txt")))
-			{
-				File.WriteAllText("SaveData\\myrooms.txt", "[]");
-			}
-			if (!(File.Exists("SaveData\\settings.txt")))
-			{
-				File.WriteAllText("SaveData\\settings.txt", Newtonsoft.Json.JsonConvert.SerializeObject(api.Settings.CreateDefaultSettings()));
-			}
+			CreateFileIfRequired("SaveData\\avataritems.txt", "Download/avataritems.txt");
+			CreateFileIfRequired("SaveData\\avataritems2.txt", "Download/avataritems2.txt");
+			CreateFileIfRequired("SaveData\\equipment.txt", "Download/equipment.txt");
+			CreateFileIfRequired("SaveData\\consumables.txt", "Download/consumables.txt");
+			CreateSaveDataIfRequired("consumables.txt");
+            CreateSaveDataIfRequired("gameconfigs.txt");
+            CreateSaveDataIfRequired("storefronts2.txt");
+            CreateSaveDataIfRequired("baserooms.txt");
+
+			CreateLocalFileIfRequired("SaveData\\Profile\\username.txt", ProfileTool.CreateName());
+			CreateLocalFileIfRequired("SaveData\\Profile\\level.txt", "10");
+			CreateLocalFileIfRequired("SaveData\\Profile\\userid.txt", new Random().Next().ToString());
+			CreateLocalFileIfRequired("SaveData\\myrooms.txt", "[]");
+			CreateLocalFileIfRequired("SaveData\\settings.txt", Newtonsoft.Json.JsonConvert.SerializeObject(api.Settings.CreateDefaultSettings()));
+
 			if (!(File.Exists("SaveData\\profileimage.png")))
 			{
 				File.WriteAllBytes("SaveData\\profileimage.png", new WebClient().DownloadData("https://github.com/OpenRecRoom/OpenRec/raw/main/profileimage.png"));
@@ -96,9 +58,6 @@ namespace start
 			{
 				File.WriteAllText("SaveData\\App\\facefeaturesadd.txt", new WebClient().DownloadString("https://raw.githubusercontent.com/recroom2016/OpenRec/master/Download/facefeaturesadd.txt"));
 			}
-			goto tryagain;
-
-		tryagain:
 			if (!File.Exists("SaveData\\Rooms\\Downloaded\\roomname.txt"))
             {
 				try
@@ -107,12 +66,92 @@ namespace start
 				}
 				catch
 				{
-					goto tryagain;
+					Console.WriteLine("Failure ?? press any key to retry (I'm not sure what this is for :scream_cat:)");
+					Console.ReadKey();
+					setup();
 				}
 				
 			}
 			Console.WriteLine("Done!");
 			Console.Clear();
 		}
+        static void CreateSaveDataIfRequired(string Name)
+        {
+            try
+            {
+                if (!File.Exists("SaveData\\" + Name))
+                {
+                    using (StreamWriter SW = File.CreateText("SaveData\\" + Name))
+                    {
+                        SW.Write(GithubTool.GetString("Download/" + Name).Result);
+                        SW.Close();
+                        SW.Dispose();
+                    }
+                }
+                Console.Write("█");
+            }
+            catch
+            {
+                Console.Write("⚠");
+            }
+        }
+        static void CreateFileIfRequired(string Path, string GithubDataPath)
+		{
+            try
+			{
+                if (!File.Exists(Path))
+                {
+					string S = GithubTool.GetString(GithubDataPath).Result;
+                    using (StreamWriter SW = File.CreateText(Path))
+                    {
+                        SW.Write(S);
+                        SW.Close();
+                        SW.Dispose();
+                    }
+                }
+                Console.Write("█");
+            }
+            catch
+            {
+                Console.Write("⚠");
+            }
+        }
+        static void CreateLocalFileIfRequired(string Path, string Content)
+        {
+            try
+            {
+                if (!File.Exists(Path))
+                {
+                    using (StreamWriter SW = File.CreateText(Path))
+                    {
+                        SW.Write(Content);
+                        SW.Close();
+                        SW.Dispose();
+                    }
+                }
+                Console.Write("█");
+            }
+            catch
+            {
+                Console.Write("⚠");
+            }
+        }
+        static void CreateFolders()
+		{
+            Directory.CreateDirectory("SaveData\\App\\");
+            Console.Write("█");
+            Directory.CreateDirectory("SaveData\\Profile\\");
+            Console.Write("█");
+            Directory.CreateDirectory("SaveData\\MultiProfiles\\");
+            Console.Write("█");
+            Directory.CreateDirectory("SaveData\\Images\\");
+            Console.Write("█");
+            Directory.CreateDirectory("SaveData\\Rooms\\");
+            Console.Write("█");
+            Directory.CreateDirectory("SaveData\\Images\\");
+            Console.Write("█");
+            Directory.CreateDirectory("SaveData\\Rooms\\Downloaded\\");
+            Console.Write("█");
+        }
 	}
 }
