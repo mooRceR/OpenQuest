@@ -17,5 +17,17 @@ namespace OpenRec.Tools
             ConsoleKeyInfo A = Console.ReadKey();
             return A;
         }
+
+        public static void SILLY()
+        {
+            Console.WriteLine(" ############# ");
+            Console.WriteLine("##  ##   ##  ##");
+            Console.WriteLine("##  ##   ##  ##");
+            Console.WriteLine("####  ###  ####");
+            Console.WriteLine("##  ##   ##  ##");
+            Console.WriteLine(" ############# ");
+            Console.WriteLine("There he is!! (EQ!!)");
+            Console.WriteLine("we are JUST like rec.net now for real :fire:");
+        }
     }
 }

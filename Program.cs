@@ -9,6 +9,7 @@ using vaultgamesesh;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using OpenRec.Tools;
+using System.Threading;
 
 namespace start
 {
@@ -267,71 +268,110 @@ namespace start
             }
             else if (A.KeyChar == '5')
             {
-                Console.Title = "OpenRec Version Select";
-                Console.WriteLine("Please select the version of RecRoom the server should host: (2016, 2017, 2018)");
-                string readline2 = Console.ReadLine();
-                if (readline2 == "2016")
-                {
-                    Console.Title = "OpenRec December 25th, 2016";
-                    version = "2016";
-                    Console.Clear();
-                    Console.WriteLine("Version Selected: December 25th, 2016.");
-                    new APIServer();
-                    new WebSocket();
-                }
-                else if (readline2 == "2017")
-                {
-                    Console.Title = "OpenRec October 19th 2017";
-                    version = "2017";
-                    Console.Clear();
-                    Console.WriteLine("Version Selected: October 19th, 2017.");
-                    new APIServer();
-                    new WebSocket();
-                }
-                else if (readline2 == "2018")
-                {
-                    Console.WriteLine("May, July or September (SEPTEMBER MIGHT NOT WORK) 2018: (M, J, S)");
-                    string readline3 = Console.ReadLine();
-                    if ((readline3 == "M") || (readline3 == "m"))
-                    {
-                        Console.Title = "OpenRec May 30th 2018";
-                        version = "2018";
-                        Console.Clear();
-                        Console.WriteLine("Version Selected: May 30th, 2018.");
-                        new NameServer();
-                        new ImageServer();
-                        new APIServer();
-                        new WebSocket();
-                    }
-                    else if ((readline3 == "S") || (readline3 == "s"))
-                    {
-                        Console.Title = "OpenRec September 27th 2018";
-                        version = "2018";
-                        Console.Clear();
-                        Console.WriteLine("Version Selected: September 27th, 2018.");
-                        new NameServer();
-                        new ImageServer();
-                        new APIServer();
-                        new Late2018WebSock();
-                    }
-                    else if ((readline3 == "J") || (readline3 == "j"))
-                    {
-                        Console.Title = "OpenRec July 20th 2018";
-                        version = "2018";
-                        Console.Clear();
-                        Console.WriteLine("Version Selected: July 20th, 2018");
-                        new NameServer();
-                        new ImageServer();
-                        new APIServer();
-                        new WebSocket();
-                    }
-                    
-                }
-                Console.WriteLine(msg);
+                VersionSelect();
             }
             else
             {
                 Main();
+            }
+        }
+
+        static void VersionSelect()
+        {
+            Console.Title = "OpenQuest - Version Select";
+            Console.Clear();
+            Console.WriteLine("Please select a game version for this server to host: \n" +
+                "(1) 2016 \n" +
+                "(2) 2017 \n" +
+                "(3) 2018");
+            string readline2 = InputTool.ReadInput().KeyChar.ToString();
+            if (readline2 == "1")
+            {
+                Console.Title = "OpenQuest - 2016";
+                version = "2016";
+                Console.Clear();
+                Console.WriteLine("Version Selected: December 25th, 2016.");
+                new APIServer();
+                new WebSocket();
+            }
+            else if (readline2 == "2")
+            {
+                Console.Title = "OpenQuest - 2017";
+                version = "2017";
+                Console.Clear();
+                Console.WriteLine("Version Selected: October 19th, 2017.");
+                new APIServer();
+                new WebSocket();
+            }
+            else if (readline2 == "3")
+            {
+                MonthSelect();
+            }
+            Console.Clear();
+            Console.WriteLine("Loading...");
+            try
+            {
+                string S = GithubTool.GetString("Download/StartupMessage.txt").Result;
+                Console.Clear();
+                InputTool.SILLY();
+                Console.WriteLine();
+                Console.WriteLine(S);
+                Console.WriteLine();
+                Console.WriteLine("The server is now online...");
+            }
+            catch
+            {
+                Console.WriteLine("[FAILED TO GET WELCOME MESSAGE! :p]");
+            }
+            Console.ReadKey();
+        }
+
+        static void MonthSelect()
+        {
+            Console.Clear();
+            Console.WriteLine("May, July or September 2018? (M, J, S)");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("September requires run as ADMIN");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            string readline3 = InputTool.ReadInput().KeyChar.ToString();
+            if ((readline3 == "M") || (readline3 == "m"))
+            {
+                Console.Title = "OpenQuest - May 2018";
+                version = "2018";
+                Console.Clear();
+                Console.WriteLine("Version Selected: May 30th, 2018.");
+                new NameServer();
+                new ImageServer();
+                new APIServer();
+                new WebSocket();
+            }
+            else if ((readline3 == "S") || (readline3 == "s"))
+            {
+                Console.Title = "OpenQuest - September 2018";
+                version = "2018";
+                Console.Clear();
+                Console.WriteLine("Version Selected: September 27th, 2018.");
+                Console.WriteLine("Starting...");
+                new NameServer();
+                new ImageServer();
+                new APIServer();
+                new Late2018WebSock();
+                Thread.Sleep(750);
+            }
+            else if ((readline3 == "J") || (readline3 == "j"))
+            {
+                Console.Title = "OpenQuest - July 2018";
+                version = "2018";
+                Console.Clear();
+                Console.WriteLine("Version Selected: July 20th, 2018");
+                new NameServer();
+                new ImageServer();
+                new APIServer();
+                new WebSocket();
+            }
+            else
+            {
+                MonthSelect();
             }
         }
 
