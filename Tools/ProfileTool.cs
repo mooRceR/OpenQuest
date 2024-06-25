@@ -20,7 +20,8 @@ namespace OpenRec.Tools
             "Alert",
             "Aimless",
             "Caring",
-            "Successful"
+            "Successful",
+            "Splooty"
         };
         static List<string> Animals = new List<string>()
         {
@@ -35,7 +36,7 @@ namespace OpenRec.Tools
         public static string CreateName()
         {
             Random R = new Random();
-            return Adjectives[R.Next(0, Adjectives.Count)] + Animals[R.Next(0, Animals.Count)] + new Random().Next(0, 999);
+            return Adjectives[R.Next(0, Adjectives.Count)] + Animals[R.Next(0, Animals.Count)] + new Random().Next(0, 9999);
         }
 
         public static void CreateProfile()
