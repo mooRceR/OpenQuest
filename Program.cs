@@ -180,7 +180,7 @@ namespace start
                             string data = "";
                             try
                             {
-                                data = new WebClient().DownloadString("https://accounts.rec.net/account/search?name=" + username);
+                                data = new WebClient().DownloadString("https://apim.rec.net/accounts/account?username=" + username);
                             }
                             catch
                             {
@@ -234,7 +234,7 @@ namespace start
                     string data2 = "";
                     try
                     {
-                        data2 = new WebClient().DownloadString("https://accounts.rec.net/account/search?name=" + readusername);
+                        data2 = new WebClient().DownloadString("https://apim.rec.net/accounts/account?username=" + readusername);
                     }
                     catch
                     {
