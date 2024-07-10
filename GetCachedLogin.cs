@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using api2018;
 using System.IO;
+using OpenRec.Tools;
 
 namespace api2018
 {
@@ -14,6 +15,10 @@ namespace api2018
 		{
 			int level = int.Parse(File.ReadAllText("SaveData\\Profile\\level.txt"));
 			string name = File.ReadAllText("SaveData\\Profile\\username.txt");
+			List<getcachedlogins> Logins = new List<getcachedlogins>();
+			List<long> Profiles = ProfileTool.GetProfiles();
+			Profiles.ForEach(A => Logins.Add(ProfileTool.GetProfile(A)));
+			return JsonConvert.SerializeObject(Logins);
 			return JsonConvert.SerializeObject(new List<getcachedlogins>
 			{
 				new getcachedlogins

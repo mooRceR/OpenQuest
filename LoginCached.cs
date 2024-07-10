@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.IO;
+using OpenRec.Tools;
 
 namespace api2018
 {
@@ -41,54 +42,33 @@ namespace api2018
 		// Token: 0x0600036A RID: 874 RVA: 0x00009044 File Offset: 0x00007244
 		public static string loginCache(ulong userid, ulong platformid)
 		{
-			int level = int.Parse(File.ReadAllText("SaveData\\Profile\\level.txt"));
-			string name = File.ReadAllText("SaveData\\Profile\\username.txt");
-			return JsonConvert.SerializeObject(new logincached
-			{
-				Error = "",
-				Player = new getcachedlogins
-				{
-					Id = userid,
-					Username = name,
-					DisplayName = name,
-					XP = 9999,
-					Level = level,
-					RegistrationStatus = 2,
-					Developer = true,
-					CanReceiveInvites = false,
-					ProfileImageName = name,
-					JuniorProfile = false,
-					ForceJuniorImages = false,
-					PendingJunior = false,
-					HasBirthday = true,
-					AvoidJuniors = true,
-					PlayerReputation = new mPlayerReputation
-					{
-						Noteriety = 0,
-						CheerCredit = 20,
-						CheerGeneral = 10,
-						CheerHelpful = 10,
-						CheerGreatHost = 10,
-						CheerSportsman = 10,
-						CheerCreative = 10,
-						SubscriberCount = 0,
-						SubscribedCount = 0,
-						SelectedCheer = 0
-					},
-					PlatformIds = new List<mPlatformID>
-					{
-						new mPlatformID
-						{
-							Platform = 0,
-							PlatformId = platformid
-						}
-					}
-				},
-				Token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImV4cCI6MTYxOTI4NzQ2MSwidmVycyI6IjIwMTcxMTE3X0VBIn0.-GqtcqPwAzr9ZJioTiz5v0Kl4HMMjH8hFMtVzQtRN5c",
-				FirstLoginOfTheDay = true,
-				AnalyticsSessionId = 392394UL,
-				CanUseScreenMode = true
-			}); 
-		}
-	}
+            int level = int.Parse(File.ReadAllText("SaveData\\Profile\\level.txt"));
+            string name = File.ReadAllText("SaveData\\Profile\\username.txt");
+            return JsonConvert.SerializeObject(new logincached
+            {
+                Error = "",
+                Player = ProfileTool.GetProfile((long)userid),
+                Token = userid.ToString(), // yeah yeah I know, but it's localhost!! it doesn't make any difference
+                FirstLoginOfTheDay = true,
+                AnalyticsSessionId = 392394UL,
+                CanUseScreenMode = true
+            });
+        }
+
+        public static string Create(ulong platformid)
+        {
+            int level = int.Parse(File.ReadAllText("SaveData\\Profile\\level.txt"));
+            string name = File.ReadAllText("SaveData\\Profile\\username.txt");
+			getcachedlogins L = ProfileTool.CreateProfile();
+            return JsonConvert.SerializeObject(new logincached
+            {
+                Error = "",
+                Player = L,
+                Token = L.Id.ToString(), // yeah yeah I know, but it's localhost!! it doesn't make any difference
+                FirstLoginOfTheDay = true,
+                AnalyticsSessionId = 392394UL,
+                CanUseScreenMode = true
+            });
+        }
+    }
 }

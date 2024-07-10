@@ -11,6 +11,7 @@ using vaultgamesesh;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
+using WebSocketSharp;
 
 namespace server
 {
@@ -368,6 +369,11 @@ namespace server
             string Url = "";
             byte[] bytes = null;
             string signature = request.Headers.Get("X-RNSIG");
+			ulong SELF = 0;
+			if(request.Headers.Contains("Authorization"))
+			{
+				SELF = ulong.Parse(request.Headers["Authorization"].Replace("Bearer ", ""));
+			}
             if (rawUrl.StartsWith("/api/"))
             {
                 Url = rawUrl.Remove(0, 5);
@@ -423,7 +429,7 @@ namespace server
             }
             if (Url == "platformlogin/v1/createaccount")
             {
-                s = logincached.loginCache(CachedPlayerID, CachedPlatformID);
+                s = logincached.Create(CachedPlatformID);
             }
             if (Url == "platformlogin/v1/logincached")
             {
